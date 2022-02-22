@@ -11,21 +11,46 @@ function computerFunction (){
 //it should tell us who won lost but also return the value the computer inputs
 function playGame ( playerSelection,computerSelection ){
     if (playerSelection.toLowerCase() === computerSelection){
-        alert(`It\`s a tie, try again mate! The computer chose ${computerSelection}`)
-        return playerSelection,
+        alert(`This one is a tie`)
     } else if ( playerSelection.toLowerCase() === 'rock' && computerSelection === 'scissors' || playerSelection.toLowerCase() === 'scissors' && computerSelection === 'paper' || playerSelection.toLowerCase() === 'paper' && computerSelection === 'rock' ){
-        alert(`You won congratulations! The computer chose ${computerSelection}`);
+        alert(`You won congratulations!`);
     } else {
-        alert(`You lost! What a bummer :( The computer chose ${computerSelection}`);
+        alert(`You lost this one! What a bummer :(`);
     }
+    return resaultOfGame = [playerSelection,computerSelection];
 }
 //we need to declare a variable called playerSelection that contains user input
-var playerSelection = prompt('Choose what you are going to play. Type rock, paper or scissors: ');
+// var playerSelection = prompt('Let`s play a 5 round game of Rock, Paper, Scissors. Choose what you are going to play. Type rock, paper or scissors: ');
 
 //we need to check if the input is valid and if it is we are going to run the function playGame
-if (!(playerSelection.toLowerCase() === 'rock' || playerSelection.toLowerCase() === 'scissors' || playerSelection.toLowerCase() === 'paper')){
-    alert('Write a valid input or check your spelling please.')
-} else playGame(playerSelection,computerFunction());
+// if (!(playerSelection.toLowerCase() === 'rock' || playerSelection.toLowerCase() === 'scissors' || playerSelection.toLowerCase() === 'paper')){
+//     alert('Write a valid input or check your spelling please.')
+// } else {playGame(playerSelection,computerFunction())};
 
-//create a function called game that is going to play a 5 round game of rock paper scissors and display the winner at the end of 5 rounds
-//we are going to create a loop that is going to look 5 times through replaying the game
+//we create variable to hold number of computer vs player victories and set their value to 0
+//we create a variable called playerSelection that asks a player to input rock paper or scissors
+//if input is valid playGame function is called and an array resaultOfGame is returned containing playerSelection and computerSelection
+//if the computer won we add 1 to computer victories, if player won we add 1 to player victories
+function game(){
+    let playerVictories = 0;
+    let computerVictories = 0;
+    let possibleValues = ['rock','paper','scissors'];
+    for(let i = 1; i <= 5; i++){
+        let playerSelection = prompt('Let`s play a 5 round game of Rock, Paper, Scissors. Choose what you are going to play. Type rock, paper or scissors: ');
+        if (!(playerSelection.toLowerCase() === 'rock' || playerSelection.toLowerCase() === 'scissors' || playerSelection.toLowerCase() === 'paper')){
+            alert('Please enter a valid input or check your spelling'); i = i - 1;
+        } else {playGame(playerSelection,computerFunction())
+            if (resaultOfGame[0] === possibleValues[0] && resaultOfGame[1] === possibleValues[2] || resaultOfGame[0] === possibleValues[1] && resaultOfGame[1] === possibleValues[0] || resaultOfGame[0] === possibleValues[2] && resaultOfGame[1] === possibleValues[1]){
+                playerVictories = playerVictories + 1;
+            } else if (resaultOfGame[0] === possibleValues[2] && resaultOfGame[1] === possibleValues[0] || resaultOfGame[0] === possibleValues[0] && resaultOfGame[1] === possibleValues[1] || resaultOfGame[0] === possibleValues[1] && resaultOfGame[1] === possibleValues[2]) {
+                computerVictories = computerVictories + 1;
+            }   
+            }
+    }
+    if (playerVictories > computerVictories){
+        alert('Good job man! You won!')
+    } else if (playerVictories === computerVictories){
+        alert('It`s a tie! Wanna go another round? Reload the page.');
+    } else {alert('Shit you lost. Wanna play again? Reload the page.')}
+}
+game();
