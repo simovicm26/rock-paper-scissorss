@@ -1,3 +1,54 @@
+//select buttons and add them to variables
+const paper = document.querySelector('.paper');
+const scissors = document.querySelector('.scissors');
+const rock = document.querySelector('.rock');
+const endOfRoundText = document.querySelector('.end-of-round-text');
+const scores = document.querySelectorAll('.score-wrapper p');
+const title = document.querySelector('#title');
+const restartButton = document.querySelector('.main-container button');
+const instructionsToggle = document.querySelector('#instructions-toggle');
+const instructionsContent = document.querySelector('.instructions-wrapper');
+let playerVictories = 0;
+let computerVictories = 0;
+let playerSelection;
+//add event listeners to buttons
+rock.addEventListener('click',function clickEvent(event){
+    playerSelection = event.target.className;
+    playGame(playerSelection,computerFunction());
+});
+paper.addEventListener('click',function clickEvent(event){
+    playerSelection = event.target.className;
+    playGame(playerSelection,computerFunction());
+});
+scissors.addEventListener('click',function clickEvent(event){
+    playerSelection = event.target.className;
+    playGame(playerSelection,computerFunction());
+});
+//restarts the game after it is finished
+restartButton.addEventListener('click', function(){
+        rock.style.display ='block';
+        paper.style.display ='block';
+        scissors.style.display ='block';
+        title.textContent = 'Choose your weapon';
+        restartButton.style.display='none';
+        endOfRoundText.textContent = '';
+        scores[0].style.color = 'black';
+        scores[1].style.color = 'black';
+        playerVictories = 0;
+        computerVictories = 0;
+        scores[0].textContent = '0';
+        scores[1].textContent = '0';
+})
+//toggle instructions on click
+instructionsToggle.addEventListener('click',function toggleInstructions(){
+    if(instructionsContent.style.display === ''){
+    instructionsContent.style.display = 'block';
+    document.querySelector('.triangle').style.transform='rotate(180deg)';
+    } else {
+        instructionsContent.style.display = '';
+        document.querySelector('.triangle').style.transform='rotate(90deg)';
+    }
+});
 // create a function called computerPlay that selects randomly between Rock , Paper or Scissors
 function computerFunction (){
     var compSelection = ['rock' , 'paper' , 'scissors'];
@@ -5,52 +56,45 @@ function computerFunction (){
     var max = compSelection.length - 0.00001;
     return compSelection[Math.floor(Math.random()*max)];
 }
-//declare a function play game which takes inputs computerSelection and playerSelection and check their relationship
-//after that it returns 1 of 3 messages. 
-//"Its a tie try again!" or "You wont congratulations" or "You lost what a bummer"
-//it should tell us who won lost but also return the value the computer inputs
+
+//declares the winner of the round and adds up the score and displays it
 function playGame ( playerSelection,computerSelection ){
-    if (playerSelection.toLowerCase() === computerSelection){
-        alert(`This one is a tie`)
-    } else if ( playerSelection.toLowerCase() === 'rock' && computerSelection === 'scissors' || playerSelection.toLowerCase() === 'scissors' && computerSelection === 'paper' || playerSelection.toLowerCase() === 'paper' && computerSelection === 'rock' ){
-        alert(`You won congratulations!`);
+    if (playerSelection === computerSelection){
+        endOfRoundText.textContent = 'This one is a tie';
+    } else if ( playerSelection === 'rock' && computerSelection === 'scissors' || playerSelection === 'scissors' && computerSelection === 'paper' || playerSelection === 'paper' && computerSelection === 'rock' ){
+        endOfRoundText.textContent = `You won congratulations!`;
+        playerVictories += 1;
+        scores[0].textContent = `${computerVictories}`;
+        scores[1].textContent = `${playerVictories}`;
+
     } else {
-        alert(`You lost this one! What a bummer :(`);
+        endOfRoundText.textContent = `You lost this one! What a bummer :(`;
+        computerVictories += 1;
+        scores[0].textContent = `${computerVictories}`;
+        scores[1].textContent = `${playerVictories}`;
     }
-    return resaultOfGame = [playerSelection,computerSelection];
+    gameOver(computerVictories,playerVictories);
 }
-//we need to declare a variable called playerSelection that contains user input
-// var playerSelection = prompt('Let`s play a 5 round game of Rock, Paper, Scissors. Choose what you are going to play. Type rock, paper or scissors: ');
 
-//we need to check if the input is valid and if it is we are going to run the function playGame
-// if (!(playerSelection.toLowerCase() === 'rock' || playerSelection.toLowerCase() === 'scissors' || playerSelection.toLowerCase() === 'paper')){
-//     alert('Write a valid input or check your spelling please.')
-// } else {playGame(playerSelection,computerFunction())};
-
-//we create variable to hold number of computer vs player victories and set their value to 0
-//we create a variable called playerSelection that asks a player to input rock paper or scissors
-//if input is valid playGame function is called and an array resaultOfGame is returned containing playerSelection and computerSelection
-//if the computer won we add 1 to computer victories, if player won we add 1 to player victories
-function game(){
-    let playerVictories = 0;
-    let computerVictories = 0;
-    let possibleValues = ['rock','paper','scissors'];
-    for(let i = 1; i <= 5; i++){
-        let playerSelection = prompt('Let`s play a 5 round game of Rock, Paper, Scissors. Choose what you are going to play. Type rock, paper or scissors: ');
-        if (!(playerSelection.toLowerCase() === 'rock' || playerSelection.toLowerCase() === 'scissors' || playerSelection.toLowerCase() === 'paper')){
-            alert('Please enter a valid input or check your spelling'); i = i - 1;
-        } else {playGame(playerSelection,computerFunction())
-            if (resaultOfGame[0] === possibleValues[0] && resaultOfGame[1] === possibleValues[2] || resaultOfGame[0] === possibleValues[1] && resaultOfGame[1] === possibleValues[0] || resaultOfGame[0] === possibleValues[2] && resaultOfGame[1] === possibleValues[1]){
-                playerVictories = playerVictories + 1;
-            } else if (resaultOfGame[0] === possibleValues[2] && resaultOfGame[1] === possibleValues[0] || resaultOfGame[0] === possibleValues[0] && resaultOfGame[1] === possibleValues[1] || resaultOfGame[0] === possibleValues[1] && resaultOfGame[1] === possibleValues[2]) {
-                computerVictories = computerVictories + 1;
-            }   
-            }
-    }
-    if (playerVictories > computerVictories){
-        alert('Good job man! You won!')
-    } else if (playerVictories === computerVictories){
-        alert('It`s a tie! Wanna go another round? Reload the page.');
-    } else {alert('Shit you lost. Wanna play again? Reload the page.')}
+//displays the end winner at the end of 5 rounds
+function gameOver (computerVictories,playerVictories){
+    if (computerVictories === 5){
+        endOfRoundText.textContent = 'Computer is the winner!';
+        scores[0].style.color = 'green';
+        scores[1].style.color = 'red';
+        rock.style.display ='none';
+        paper.style.display ='none';
+        scissors.style.display ='none';
+        title.textContent = 'Press the button to restart:';
+        restartButton.style.display='block';
+    } else if (playerVictories === 5){
+        endOfRoundText.textContent = 'You are the winner!';
+        scores[0].style.color = 'red';
+        scores[1].style.color = 'green';
+        rock.style.display ='none';
+        paper.style.display ='none';
+        scissors.style.display ='none';
+        title.textContent = 'Press the button to restart:';
+        restartButton.style.display='block'; 
+    } else return;
 }
-game();
